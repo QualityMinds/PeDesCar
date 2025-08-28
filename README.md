@@ -2,6 +2,9 @@
 
 This intends to generate datasets related to impact collision using Mujoco Physics Engine, OpenAI, RL for human motion prediction.
 
+Sample data is located in `sample_data` folder.  
+For the full dataset, please contact us via: [QualityMinds LinkedIn](https://www.linkedin.com/company/qualityminds-gmbh/)
+
 # Installation
 tested on python 3.8.10
 
