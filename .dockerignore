@@ -1,0 +1,14 @@
+logs/
+
+__pycache__/
+pedestrian-impact/
+agents/
+agents_old/
+mlarki/
+logs/
+loco-mujoco/
+ls-iq/
+
+logdir/
+weights/
+checkpoint/
