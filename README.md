@@ -1,9 +1,12 @@
-# impact_collision_dataset 
+# PeDesCar 
 
 This intends to generate datasets related to impact collision using Mujoco Physics Engine, OpenAI, RL for human motion prediction.
 
-Sample data is located in `sample_data` folder.  
-For the full dataset, please contact us via: [QualityMinds LinkedIn](https://www.linkedin.com/company/qualityminds-gmbh/)
+Accepted Paper – WSCG 2025
+Explore our latest research and reproducible results: [Paper PDF](http://wscg.zcu.cz/WSCG2025/papers/C47.pdf)
+Git reposiroty from the paper: 
+Sample Data is available in the `sample_data` folder.  
+For the full dataset and collaboration opportunities, reach out via: [QualityMinds LinkedIn](https://www.linkedin.com/company/qualityminds-gmbh/)
 
 # Installation
 tested on python 3.8.10
