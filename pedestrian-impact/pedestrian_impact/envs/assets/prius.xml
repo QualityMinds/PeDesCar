@@ -1,0 +1,117 @@
+<mujoco model="prius">
+  <compiler angle="radian" coordinate="local" meshdir="meshes/" texturedir="textures/" balanceinertia="true" />  
+  <statistic meansize="0.178661" extent="5.7907" center="1.31948 3.98163e-05 0.647599"/>
+  <!-- <statistic meansize="0.368529" extent="5.2669" center="1.30956e-05 0.093534 0.625683"/> -->
+  <default>
+    <default class="wheel">
+      <geom type="cylinder" size="0.31265 .11" rgba="0.9 .75 .54 1"/>
+    </default>
+  </default>
+
+  <asset>
+    <mesh name="chassis" file="hybrid_body.stl" scale="0.01 0.01 0.01"/>
+    <mesh name="wheel" file="wheel.stl" scale="0.01 0.01 0.01"/>
+    <mesh name="steering_wheel" file="steering_wheel.stl" scale="0.01 0.01 0.01"/>
+    <texture file="Hybrid.png" name="chassis"/>
+    <texture file="Hybrid_Interior.png" name="texture_hybrid_interior"/>
+    <texture file="Wheels3.png" name="texture_wheel"/>
+    <material name="chassis" texture="chassis" specular="1" shininess="1"/>
+    <material name="wheel"  texture="texture_wheel" specular="1" shininess="1"/>
+  </asset>
+  <worldbody>
+    <light name="spotlight2" mode="trackcom" pos="0 10 2" dir="0 -1 0"/>
+    <camera name="track_car_side" mode="trackcom" pos='-5 -2 1' xyaxes="0 -10 0.05 0 1 0"/>
+    <camera name="track_car_top" mode="trackcom" pos='0 -3 10' xyaxes="0 -10 0.05 1 0 0"/>
+    <body name="car" pos='0 -2.6 0.0132993' quat='1 0 0 1'>
+      <camera name="track_car_back" mode="trackcom" pos='0 -7 2' euler="1.57 0 0"/> <!-- pos='0 -7 1'  -->
+      <camera name="track_driver" mode="trackcom" pos='0. 1. 1.5' euler="1.57 -1.57 0"/> <!-- pos='-0.28 0 1''  -->
+      
+      <joint name="car_tz" type="slide" pos="0 0 0" axis="       0        0        1" limited="true" range="      -300        300" ref="0" armature="0" damping="0" stiffness="0"></joint>
+      <joint name="car_ty" type="slide" pos="0 0 0" axis="       0        1        0" limited="true" range="      -100        200" ref="0" armature="0" damping="0" stiffness="0"></joint>
+      <joint name="car_tx" type="slide" pos="0 0 0" axis="       1        0        0" limited="true" range="      -500        500" ref="0" armature="0" damping="0" stiffness="0"></joint>
+      <joint name="car_tilt" type="hinge" pos="0 0 0" axis="       0        0        1" limited="true" range=" -1.5708   1.5708" ref="0" armature="0" damping="0" stiffness="0"></joint>
+      <joint name="car_list" type="hinge" pos="0 0 0" axis="       1        0        0" limited="true" range=" -1.5708   1.5708" ref="0" armature="0" damping="0" stiffness="0"></joint>
+      <joint name="car_rotation" type="hinge" pos="0 0 0" axis="       0        1        0" limited="true" range=" -1.5708   1.5708" ref="0" armature="0" damping="0" stiffness="0"></joint>
+
+      <!-- <geom name="chassis_visual"  size="0.8763 1.05 0.475" pos="-7.6 3.98163e-05 0.0"  quat="0.707388 -0.7 -0.7 0.706825" type="mesh" mesh="chassis"/> -->
+      <geom name="chassis_visual" size="0.8763 1.05 0.475" pos="0 3.98163e-05 0.0" quat="0.707388 -0.7 -0.7 0.706825" solref="0.001 0.9999" solimp="999.9999 0.0000001 0.0000001" type="mesh" mesh="chassis"/>
+      <body name="rear_left_wheel" pos="-1.399368053 0.794154 0.3"  zaxis="0 1 0">
+        <inertial pos="0 0 0" mass="11" diaginertia="0.586312 0.335529 0.335529"/>
+        <joint name="rear_left_wheel_joint" range="-0.8727 0.8727" limited="false"/>
+        <geom name="rear_left_wheel" class="wheel"/>
+      </body>
+      <body name="rear_right_wheel" pos="-1.400631027 -0.791845 0.3" zaxis="0 1 0">
+        <inertial pos="0 0 0" mass="11" diaginertia="0.586312 0.335529 0.335529"/>
+        <joint name="rear_right_wheel_joint" range="-0.8727 0.8727" limited="false"/>
+        <geom name="rear_right_wheel" class="wheel"/>
+      </body>
+
+      <body name="steering_body" pos="0 0 0">
+        <body name="steering_wheel" pos="0.67815 0.357234 0.988243" quat="0.56269 -0.428693 -0.428352 0.562242">
+          <inertial pos="0 0 0" mass="1" diaginertia="0.145833 0.145833 0.125"/>
+          <joint name="steering_joint" pos="0 0 0" axis="0 0 1" range="-7.85 7.85"/>
+          <geom name="steering_wheel" type="mesh" contype="0" conaffinity="0" group="1" mesh="steering_wheel"/>
+        </body>
+        <body name="front_left_steer_joint" pos="1.46061 0.765877 0.3" zaxis="0 1 0">
+          <inertial pos="0 0 0" mass="1" diaginertia="0.004 0.004 0.004"/>
+          <joint name="front_left_steer_joint" pos="0 0 0" axis="0 1 0" range="-0.8727 0.8727" damping="0.01" frictionloss="0.01" limited="true" solreflimit="0.09 0.10" solimplimit="0.90 1.00 0.000001"/>
+          <body name="front_left_wheel">
+            <inertial pos="0 0 0" mass="11" diaginertia="0.586312 0.335529 0.335529"/>
+            <joint name="front_left_wheel_joint" pos="0 0 0" axis="0 0 1" range="-0.8727 0.8727" type="hinge"  limited="false"/>
+            <geom name="front_left_wheel" class="wheel"/>
+          </body>
+        </body>
+        <body name="front_right_steer_joint" pos="1.45939 -0.768123 0.3" zaxis="0 1 0">
+          <inertial pos="0 0 0" mass="1" diaginertia="0.004 0.004 0.004"/>
+          <joint name="front_right_steer_joint" pos="0 0 0" axis="0 1 0" range="-0.8727 0.8727" damping="0.01" frictionloss="0.01" limited="true" solreflimit="0.09 0.10" solimplimit="0.90 1.00 0.000001"/>
+          <body name="front_right_wheel">
+            <inertial pos="0 0 0" mass="11" diaginertia="0.586312 0.335529 0.335529"/>
+            <joint name="front_right_wheel_joint" pos="0 0 0" axis="0 0 1" range="-0.8727 0.8727" type="hinge" limited="false"/>
+            <geom name="front_right_wheel" class="wheel"/>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <!--Synchronize the steering values of right and left wheels-->
+	<equality>
+		<joint joint1="front_left_steer_joint" joint2="front_right_steer_joint" polycoef="0 1 0 0 0"></joint>
+	</equality>
+
+  <tendon>
+    <fixed name="front_wheel">
+      <joint joint="front_left_wheel_joint" coef=".5"/>
+      <joint joint="front_right_wheel_joint" coef=".5"/>
+    </fixed>
+    <fixed name="back_wheel" limited="false">
+      <joint joint="rear_left_wheel_joint" coef=".5"/>
+      <joint joint="rear_right_wheel_joint" coef=".5"/>
+    </fixed>
+    <fixed name="turn">
+      <joint joint="front_left_steer_joint" coef="1.0"/>
+      <joint joint="front_right_steer_joint" coef="1.0"/>
+      <joint joint="steering_joint" coef="1.0"/>
+    </fixed>
+  </tendon>
+
+  <actuator>
+    <!-- <motor name="vel_car_x" ctrlrange="-500 500" gear="1000" joint="car_x"/> -->
+    <motor name="front_wheel" tendon="front_wheel" ctrlrange="-20 20" gear="100"/>
+    <motor name="back_wheel" tendon="back_wheel" ctrlrange="-20 20" gear="100"/>
+    <motor name="turn" tendon="turn" ctrlrange="-0.95 0.95" gear="700"/>
+  </actuator>
+<!-- 
+  <sensor>
+    <jointactuatorfrc name="front_right_wheel_joint" joint="front_right_wheel_joint"/>
+    <jointactuatorfrc name="front_left_wheel_joint" joint="front_left_wheel_joint"/>
+  </sensor>
+ -->
+  <contact> 
+    <exclude name="exclude_car_fl1" body1="car" body2="front_left_wheel"/>
+    <exclude name="exclude_car_fr1" body1="car" body2="front_right_wheel"/>
+    <exclude name="exclude_car_rl1" body1="car" body2="rear_left_wheel"/>
+    <exclude name="exclude_car_rr1" body1="car" body2="rear_right_wheel"/>
+  </contact>
+</mujoco>
+

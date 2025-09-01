@@ -1,0 +1,4 @@
+<mujoco model="impact_collision">
+  <include file="autocar.xml"/>
+  <include file="humanoid_torque.xml"/>
+</mujoco>

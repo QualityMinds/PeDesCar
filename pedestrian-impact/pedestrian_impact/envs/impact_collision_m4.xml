@@ -1,0 +1,4 @@
+<mujoco model="impact_collision">
+  <include file="assets/prius.xml"/>
+  <include file="assets/humanoid_torque.xml"/>
+</mujoco>

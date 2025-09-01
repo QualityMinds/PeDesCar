@@ -1,0 +1,110 @@
+<mujoco model="autocar">
+  <compiler angle="radian" meshdir="meshes/" balanceinertia="true"/>
+  <!-- <option integrator="RK4" iterations="100" timestep="0.0001"></option> -->
+  <visual>
+    <global offwidth="1920" offheight="1080"/>
+    <scale jointwidth="0.025"/>
+  </visual>
+  <statistic meansize="0.368529" extent="5.2669" center="1.30956e-05 0.093534 0.625683"/>
+  <asset>
+    <mesh name="chassis_link" file="chassis_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="spoiler" file="spoiler.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rear_right_wheel" file="br_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="rear_left_wheel" file="bl_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="front_right_wheel" file="fr_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="front_left_wheel" file="fl_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="steering_wheel" file="steering_wheel.stl" scale="0.01 0.01 0.01"/>
+  </asset>
+
+  <worldbody>
+    <camera name="track_car_side" mode="trackcom" pos='-5 -2 1' xyaxes="0 -10 0.05 0 1 0"/>
+    <camera name="track_car_top" mode="trackcom" pos='0 -3 10' xyaxes="0 -10 0.05 1 0 0"/>
+    <body name='car' pos='0 -2.6 -0.0238' quat='1 0 0 0'>
+      <camera name="track_car_back" mode="trackcom" pos='0 -7 2' euler="1.57 0 0"/> <!-- pos='0 -7 1'  -->
+      <camera name="track_driver" mode="trackcom" pos='-0.28 -1.5 1.5' euler="1.57 0 0"/> <!-- pos='-0.28 0 1''  -->
+
+      <joint name="car_tz" type="slide" pos="0 0 0" axis="       0        0        1" limited="true" range="      -300        300" ref="0" armature="0" damping="0" stiffness="0"></joint>
+      <joint name="car_tx" type="slide" pos="0 0 0" axis="       0        1        0" limited="true" range="      -100        200" ref="0" armature="0" damping="0" stiffness="0"></joint>  <!-- Quaternion changed the axis x-y -->
+      <joint name="car_ty" type="slide" pos="0 0 0" axis="       1        0        0" limited="true" range="      -500        500" ref="0" armature="0" damping="0" stiffness="0"></joint>  <!-- Quaternion changed the axis x-y -->
+      <joint name="car_tilt" type="hinge" pos="0 0 0" axis="       0        0        1" limited="true" range=" -1.5708   1.5708" ref="0" armature="0" damping="0" stiffness="0"></joint>
+      <joint name="car_list" type="hinge" pos="0 0 0" axis="       1        0        0" limited="true" range=" -1.5708   1.5708" ref="0" armature="0" damping="0" stiffness="0"></joint>
+      <joint name="car_rotation" type="hinge" pos="0 0 0" axis="       0        1        0" limited="true" range=" -1.5708   1.5708" ref="0" armature="0" damping="0" stiffness="0"></joint>
+
+      <geom name="chassis_visual" pos="0 0 0.4936" type="mesh" rgba="0.1 0.1 0.1 0.5" mesh="chassis_link"/>
+      <geom name="chassis_car_box" size="0.025 0.025 0.025" pos="0 2.34 0.7336" quat="0.281538 0 0 0.95955" type="box"/>
+      <geom name="chassis_spoiler" pos="0 0.05 0.4436" quat="9.38184e-07 9.38187e-07 0.707108 0.707105" type="mesh" rgba="0.1 0.1 0.1 0.5" mesh="spoiler"/>
+      <body name="rear_right_wheel" pos="0.875 -1.01364 0.349237">
+        <inertial pos="-0.0377 1.5929e-07 -1.5929e-07" mass="24.5" diaginertia="1.84514 1.04961 1.04961"/>
+        <joint name="rear_right_wheel_joint" pos="0 0 0" axis="-1 0 0" limited="false"/>
+        <geom name="rear_right_wheel"  pos="-0.875 1.0136 0.1444" type="mesh" rgba="0 0 0 0.7" mesh="rear_right_wheel"/>
+      </body>
+      <body name="rear_left_wheel" pos="-0.875 -1.01364 0.349237">
+        <inertial pos="-0.0377 1.5929e-07 -1.5929e-07" mass="24.5" diaginertia="1.84514 1.04961 1.04961"/>
+        <joint name="rear_left_wheel_joint" pos="0 0 0" axis="-1 0 0" limited="false"/>
+        <geom name="rear_left_wheel" pos="0.875 1.0136 0.1444" type="mesh" rgba="0 0 0 0.7" mesh="rear_left_wheel"/>
+      </body>
+
+      <body name="steering_body" pos="0 0 0">
+        <body name="steering_wheel" pos="-0.3 0.5 0.8" quat="-0.7 0.7 0 0">
+          <inertial pos="0 0 0" mass="1" diaginertia="-0.854167 0.145833 0.125"/>
+          <joint name="steering_joint" pos="0 0 0" axis="0 0 1" range="-7.85 7.85" limited="false"/>
+          <geom name="steering_wheel" type="mesh" contype="0" conaffinity="0" group="1" mesh="steering_wheel"/>
+        </body>
+
+        <body name="front_right_steer_joint" pos="0.825 1.51736 0.349237">
+          <inertial pos="0.003381 1.5929e-07 0.02162" mass="1" diaginertia="0.004 0.004 0.004"/>
+          <joint name="front_right_steer_joint" pos="0 0 0" axis="0 0 1" range="-0.8727 0.8727" damping="0.01" frictionloss="0.01" limited="true" solreflimit="0.09 0.10" solimplimit="0.90 1.00 0.000001"/>
+          <body name="front_right_wheel" pos="0.05 0 0">
+            <inertial pos="-0.0377 1.5929e-07 -1.5929e-07" mass="24.5" diaginertia="1.84514 1.04961 1.04961"/>
+            <joint name="front_right_wheel_joint" pos="0 0 0" axis="-1 0 0" limited="false"/>
+            <geom name="front_right_wheel" pos="-0.875 -1.5174 0.1444" type="mesh" rgba="0 0 0 0.7" mesh="front_right_wheel"/>
+          </body>
+        </body>
+
+        <body name="front_left_steer_joint" pos="-0.825 1.51736 0.349237">
+          <inertial pos="0.003381 1.5929e-07 0.02162" mass="1" diaginertia="0.004 0.004 0.004"/>
+          <joint name="front_left_steer_joint" pos="0 0 0" axis="0 0 1" range="-0.8727 0.8727" damping="0.01" frictionloss="0.01" limited="true" solreflimit="0.09 0.10" solimplimit="0.90 1.00 0.000001"/>
+          <body name="front_left_wheel" pos="-0.05 0 0">
+            <inertial pos="-0.0377 1.5929e-07 -1.5929e-07" mass="24.5" diaginertia="1.84514 1.04961 1.04961"/>
+            <joint name="front_left_wheel_joint" pos="0 0 0" axis="-1 0 0" limited="false"/>
+            <geom name="front_left_wheel"  pos="0.875 -1.5174 0.1444" type="mesh" rgba="0 0 0 0.7" mesh="front_left_wheel"/>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <!--Synchronize the steering values of right and left wheels-->
+	<equality>
+		<joint joint1="front_right_steer_joint" joint2="front_left_steer_joint" polycoef="0 1 0 0 0"></joint>
+	</equality>
+
+  <!--To control the left and right wheels simultaneously-->
+  <tendon>
+    <fixed name="front_wheel" limited="false">
+      <joint joint="front_right_wheel_joint" coef=".5"/>
+      <joint joint="front_left_wheel_joint" coef=".5"/>
+    </fixed>
+    <fixed name="back_wheel" limited="false">
+      <joint joint="rear_right_wheel_joint" coef=".5"/>
+      <joint joint="rear_left_wheel_joint" coef=".5"/>
+    </fixed>
+    <fixed name="turn">
+      <joint joint="front_right_steer_joint" coef="-1.0"/>
+      <joint joint="front_left_steer_joint" coef="-1.0"/>
+      <joint joint="steering_joint" coef="1.0"/>
+    </fixed>
+  </tendon>
+
+  <actuator>
+    <motor name="front_wheel" tendon="front_wheel" ctrlrange="-20 20" gear="100"/>
+    <motor name="back_wheel" tendon="back_wheel" ctrlrange="-20 20" gear="100"/>
+    <motor name="turn" tendon="turn" ctrlrange="-0.95 0.95" gear="100"/>
+  </actuator>
+
+  <!--Avoid collision of front wheel and car body-->
+  <contact> 
+        <exclude name="exclude_car_fr1" body1="car" body2="front_right_wheel"/>
+        <exclude name="exclude_car_fl1" body1="car" body2="front_left_wheel"/>
+  </contact>
+</mujoco>
